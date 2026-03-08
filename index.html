@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>سينمانا كيرا</title>
   <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -15,17 +15,33 @@
       --paper: #1a1008;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
 
     body {
       font-family: 'Amiri Quran', 'Noto Naskh Arabic', serif;
       background: var(--black);
-      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      overflow: hidden;
       position: relative;
+      padding: 16px 12px 24px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
     }
 
     /* ===== CANVAS BACKGROUND ===== */
@@ -40,22 +56,23 @@
     /* ===== FALLING PAGES ===== */
     .page {
       position: fixed;
-      width: 28px;
-      height: 36px;
+      width: 18px;
+      height: 24px;
       background: linear-gradient(135deg, #1c1208, #0d0a05);
       border: 1px solid rgba(192,57,43,0.3);
       border-radius: 2px;
       opacity: 0;
       animation: fallPage linear infinite;
       z-index: 1;
-      box-shadow: inset 0 0 8px rgba(192,57,43,0.1);
+      box-shadow: inset 0 0 6px rgba(192,57,43,0.1);
+      pointer-events: none;
     }
     .page::before {
       content: '';
       display: block;
-      width: 60%; height: 2px;
+      width: 60%; height: 1.5px;
       background: rgba(192,57,43,0.4);
-      margin: 6px auto 3px;
+      margin: 5px auto 3px;
       border-radius: 1px;
     }
     .page::after {
@@ -78,41 +95,42 @@
     .drip {
       position: fixed;
       top: 0;
-      width: 3px;
+      width: 2px;
       background: linear-gradient(to bottom, transparent, var(--dark-red), var(--red));
       border-radius: 0 0 50% 50%;
       animation: dripDown ease-in infinite;
       z-index: 1;
       opacity: 0;
+      pointer-events: none;
     }
     @keyframes dripDown {
       0%   { height: 0; opacity: 0; }
       20%  { opacity: 0.8; }
       80%  { opacity: 0.6; }
-      100% { height: 40vh; opacity: 0; }
+      100% { height: 30vh; opacity: 0; }
     }
 
-    /* ===== EYES (Ryuk-style) ===== */
+    /* ===== EYES ===== */
     .eye-container {
       position: fixed;
       z-index: 2;
       pointer-events: none;
       animation: eyeFloat ease-in-out infinite alternate;
     }
-    .eye-container.left  { bottom: 10%; left: 3%; animation-duration: 5s; }
-    .eye-container.right { bottom: 10%; right: 3%; animation-duration: 7s; }
+    .eye-container.left  { bottom: 6%; left: 2%; animation-duration: 5s; }
+    .eye-container.right { bottom: 6%; right: 2%; animation-duration: 7s; }
 
     @keyframes eyeFloat {
       from { transform: translateY(0) scale(1); }
-      to   { transform: translateY(-15px) scale(1.05); }
+      to   { transform: translateY(-10px) scale(1.05); }
     }
 
     .eye {
-      width: 70px; height: 35px;
+      width: 44px; height: 22px;
       background: radial-gradient(ellipse at center, #ff2200 0%, #8b0000 50%, #1a0000 100%);
       border-radius: 50%;
       position: relative;
-      box-shadow: 0 0 20px rgba(255,34,0,0.6), 0 0 40px rgba(192,57,43,0.3);
+      box-shadow: 0 0 12px rgba(255,34,0,0.6), 0 0 24px rgba(192,57,43,0.3);
       animation: eyePulse 2.5s ease-in-out infinite alternate;
     }
     .eye::before {
@@ -120,233 +138,28 @@
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%,-50%);
-      width: 20px; height: 20px;
+      width: 13px; height: 13px;
       background: radial-gradient(circle, #ff0000, #000);
       border-radius: 50%;
-      box-shadow: 0 0 8px #ff0000;
+      box-shadow: 0 0 6px #ff0000;
     }
     .eye::after {
       content: '';
       position: absolute;
       top: 20%; left: 55%;
-      width: 6px; height: 6px;
+      width: 4px; height: 4px;
       background: rgba(255,255,255,0.7);
       border-radius: 50%;
     }
     @keyframes eyePulse {
-      from { box-shadow: 0 0 20px rgba(255,34,0,0.6), 0 0 40px rgba(192,57,43,0.3); }
-      to   { box-shadow: 0 0 35px rgba(255,34,0,0.9), 0 0 70px rgba(192,57,43,0.5); }
-    }
-
-    /* ===== RED LIGHTNING ===== */
-    .lightning {
-      position: fixed;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0;
-      animation: flash linear infinite;
-    }
-    @keyframes flash {
-      0%, 90%, 100% { opacity: 0; }
-      92%, 96%       { opacity: 0.5; }
-    }
-
-    /* ===== CARD ===== */
-    .card {
-      position: relative;
-      z-index: 10;
-      background: linear-gradient(160deg, #120c06 0%, #0a0805 50%, #15090a 100%);
-      border-radius: 4px;
-      padding: 42px 36px 36px;
-      text-align: center;
-      max-width: 400px;
-      width: 92%;
-      border: 1px solid rgba(192,57,43,0.35);
-      box-shadow:
-        0 0 0 1px rgba(201,168,76,0.1),
-        0 0 40px rgba(192,57,43,0.2),
-        0 30px 80px rgba(0,0,0,0.8),
-        inset 0 1px 0 rgba(201,168,76,0.15);
-      animation: cardAppear 0.8s cubic-bezier(0.16,1,0.3,1) both;
-    }
-
-    @keyframes cardAppear {
-      from { opacity: 0; transform: translateY(30px) scale(0.95); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* Notebook lines on card */
-    .card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 4px;
-      background: repeating-linear-gradient(
-        to bottom,
-        transparent,
-        transparent 27px,
-        rgba(192,57,43,0.06) 27px,
-        rgba(192,57,43,0.06) 28px
-      );
-      pointer-events: none;
-    }
-
-    /* Red left border like a notebook */
-    .card::after {
-      content: '';
-      position: absolute;
-      top: 0; right: 0;
-      bottom: 0;
-      width: 3px;
-      background: linear-gradient(to bottom, transparent, var(--dark-red) 20%, var(--red) 50%, var(--dark-red) 80%, transparent);
-      border-radius: 0 4px 4px 0;
-      opacity: 0.7;
-    }
-
-    /* ===== ICON ===== */
-    .app-icon {
-      width: 80px; height: 80px;
-      margin: 0 auto 18px;
-      background: linear-gradient(145deg, #1c0f0f, #0d0808);
-      border-radius: 18px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 42px;
-      border: 1px solid rgba(192,57,43,0.5);
-      box-shadow: 0 0 20px rgba(192,57,43,0.3), 0 8px 20px rgba(0,0,0,0.5);
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ===== TITLE ===== */
-    h1 {
-      font-family: 'Amiri Quran', serif;
-      color: var(--gold);
-      font-size: 30px;
-      margin-bottom: 4px;
-      letter-spacing: 1px;
-      text-shadow: 0 0 20px rgba(201,168,76,0.4), 0 2px 4px rgba(0,0,0,0.8);
-      position: relative;
-      z-index: 1;
-    }
-
-    .subtitle-line {
-      width: 60px;
-      height: 1px;
-      background: linear-gradient(to right, transparent, var(--gold), transparent);
-      margin: 10px auto 18px;
-      opacity: 0.5;
-    }
-
-    /* ===== DESCRIPTION BOX ===== */
-    .desc-box {
-      background: rgba(0,0,0,0.4);
-      border: 1px solid rgba(192,57,43,0.25);
-      border-right: 3px solid rgba(192,57,43,0.5);
-      border-radius: 6px;
-      padding: 14px 16px;
-      margin-bottom: 26px;
-      position: relative;
-      z-index: 1;
-    }
-    .desc-box p {
-      color: rgba(240,230,211,0.8);
-      font-family: 'Noto Naskh Arabic', serif;
-      font-size: 13.5px;
-      line-height: 2;
-      text-align: right;
-    }
-
-    /* ===== BUTTONS ===== */
-    .btn-group {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .install-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: linear-gradient(135deg, #8b1a1a 0%, #c0392b 50%, #8b1a1a 100%);
-      color: var(--white);
-      padding: 16px 28px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-family: 'Amiri Quran', serif;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      border: 1px solid rgba(255,100,80,0.3);
-      box-shadow: 0 4px 20px rgba(192,57,43,0.4), 0 2px 4px rgba(0,0,0,0.5);
-      transition: all 0.2s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .install-btn::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-      transition: left 0.4s ease;
-    }
-    .install-btn:hover::before { left: 100%; }
-    .install-btn:hover {
-      box-shadow: 0 6px 30px rgba(192,57,43,0.6), 0 2px 6px rgba(0,0,0,0.6);
-      transform: translateY(-1px);
-    }
-    .install-btn:active { transform: scale(0.97); }
-
-    .contact-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: transparent;
-      color: rgba(240,230,211,0.7);
-      padding: 13px 28px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-family: 'Amiri Quran', serif;
-      font-size: 16px;
-      border: 1px solid rgba(192,57,43,0.3);
-      transition: all 0.2s ease;
-    }
-    .contact-btn:hover {
-      background: rgba(192,57,43,0.1);
-      color: var(--white);
-      border-color: rgba(192,57,43,0.6);
-    }
-    .contact-btn:active { transform: scale(0.97); }
-
-    /* ===== NOTE ===== */
-    .note {
-      margin-top: 22px;
-      padding: 12px 14px;
-      background: rgba(201,168,76,0.05);
-      border: 1px solid rgba(201,168,76,0.15);
-      border-radius: 6px;
-      font-family: 'Noto Naskh Arabic', serif;
-      font-size: 12px;
-      color: rgba(201,168,76,0.65);
-      line-height: 2;
-      text-align: right;
-      position: relative;
-      z-index: 1;
-    }
-    .note strong {
-      color: rgba(201,168,76,0.9);
-      display: block;
-      margin-bottom: 4px;
+      from { box-shadow: 0 0 12px rgba(255,34,0,0.6), 0 0 24px rgba(192,57,43,0.3); }
+      to   { box-shadow: 0 0 22px rgba(255,34,0,0.9), 0 0 44px rgba(192,57,43,0.5); }
     }
 
     /* ===== FLOATING KANJI ===== */
     .kanji {
       position: fixed;
-      font-size: 80px;
+      font-size: clamp(30px, 6vw, 60px);
       color: rgba(192,57,43,0.04);
       font-weight: 900;
       pointer-events: none;
@@ -356,7 +169,227 @@
     }
     @keyframes kanjiDrift {
       from { transform: translateY(0) rotate(-5deg); opacity: 0.03; }
-      to   { transform: translateY(-30px) rotate(5deg); opacity: 0.07; }
+      to   { transform: translateY(-20px) rotate(5deg); opacity: 0.07; }
+    }
+
+    /* ===== WRAPPER ===== */
+    .wrapper {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto;
+      padding-top: 8px;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      background: linear-gradient(160deg, #120c06 0%, #0a0805 50%, #15090a 100%);
+      border-radius: 10px;
+      padding: clamp(20px, 5vw, 32px) clamp(16px, 4vw, 28px) clamp(18px, 4vw, 28px);
+      text-align: center;
+      border: 1px solid rgba(192,57,43,0.35);
+      box-shadow:
+        0 0 0 1px rgba(201,168,76,0.08),
+        0 0 30px rgba(192,57,43,0.15),
+        0 20px 50px rgba(0,0,0,0.7),
+        inset 0 1px 0 rgba(201,168,76,0.12);
+      animation: cardAppear 0.7s cubic-bezier(0.16,1,0.3,1) both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes cardAppear {
+      from { opacity: 0; transform: translateY(20px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 10px;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 24px,
+        rgba(192,57,43,0.05) 24px,
+        rgba(192,57,43,0.05) 25px
+      );
+      pointer-events: none;
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, transparent, var(--dark-red) 20%, var(--red) 50%, var(--dark-red) 80%, transparent);
+      border-radius: 0 10px 10px 0;
+      opacity: 0.6;
+    }
+
+    /* ===== ICON ===== */
+    .app-icon {
+      width: clamp(56px, 14vw, 68px);
+      height: clamp(56px, 14vw, 68px);
+      margin: 0 auto 14px;
+      background: linear-gradient(145deg, #1c0f0f, #0d0808);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: clamp(28px, 7vw, 36px);
+      border: 1px solid rgba(192,57,43,0.5);
+      box-shadow: 0 0 16px rgba(192,57,43,0.3), 0 6px 16px rgba(0,0,0,0.5);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== TITLE ===== */
+    h1 {
+      font-family: 'Amiri Quran', serif;
+      color: var(--gold);
+      font-size: clamp(20px, 6vw, 26px);
+      margin-bottom: 4px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 16px rgba(201,168,76,0.4), 0 2px 4px rgba(0,0,0,0.8);
+      position: relative;
+      z-index: 1;
+    }
+
+    .subtitle-line {
+      width: 50px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      margin: 8px auto 14px;
+      opacity: 0.5;
+    }
+
+    /* ===== DESCRIPTION BOX ===== */
+    .desc-box {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(192,57,43,0.22);
+      border-right: 3px solid rgba(192,57,43,0.45);
+      border-radius: 8px;
+      padding: clamp(10px, 3vw, 14px) clamp(12px, 3vw, 16px);
+      margin-bottom: clamp(16px, 4vw, 22px);
+      position: relative;
+      z-index: 1;
+    }
+    .desc-box p {
+      color: rgba(240,230,211,0.8);
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: clamp(12px, 3.2vw, 13.5px);
+      line-height: 1.9;
+      text-align: right;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(8px, 2.5vw, 12px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .install-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #8b1a1a 0%, #c0392b 50%, #8b1a1a 100%);
+      color: var(--white);
+      padding: clamp(13px, 3.5vw, 16px) clamp(20px, 5vw, 28px);
+      border-radius: 8px;
+      text-decoration: none;
+      font-family: 'Amiri Quran', serif;
+      font-size: clamp(15px, 4vw, 18px);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border: 1px solid rgba(255,100,80,0.3);
+      box-shadow: 0 4px 16px rgba(192,57,43,0.4), 0 2px 4px rgba(0,0,0,0.5);
+      transition: all 0.15s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    .install-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+      transition: left 0.35s ease;
+    }
+    .install-btn:hover::before { left: 100%; }
+    .install-btn:hover {
+      box-shadow: 0 6px 24px rgba(192,57,43,0.55), 0 2px 6px rgba(0,0,0,0.6);
+      transform: translateY(-1px);
+    }
+    .install-btn:active {
+      transform: scale(0.96);
+      box-shadow: 0 2px 10px rgba(192,57,43,0.4);
+    }
+
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: transparent;
+      color: rgba(240,230,211,0.7);
+      padding: clamp(11px, 3vw, 13px) clamp(20px, 5vw, 28px);
+      border-radius: 8px;
+      text-decoration: none;
+      font-family: 'Amiri Quran', serif;
+      font-size: clamp(13px, 3.5vw, 16px);
+      border: 1px solid rgba(192,57,43,0.3);
+      transition: all 0.15s ease;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .contact-btn:hover {
+      background: rgba(192,57,43,0.1);
+      color: var(--white);
+      border-color: rgba(192,57,43,0.55);
+    }
+    .contact-btn:active {
+      transform: scale(0.96);
+      background: rgba(192,57,43,0.15);
+    }
+
+    /* ===== NOTE ===== */
+    .note {
+      margin-top: clamp(14px, 4vw, 20px);
+      padding: clamp(10px, 3vw, 12px) clamp(12px, 3vw, 14px);
+      background: rgba(201,168,76,0.04);
+      border: 1px solid rgba(201,168,76,0.14);
+      border-radius: 8px;
+      font-family: 'Noto Naskh Arabic', serif;
+      font-size: clamp(11px, 2.8vw, 12px);
+      color: rgba(201,168,76,0.65);
+      line-height: 1.9;
+      text-align: right;
+      position: relative;
+      z-index: 1;
+    }
+    .note strong {
+      color: rgba(201,168,76,0.9);
+      display: block;
+      margin-bottom: 4px;
+      font-size: clamp(11.5px, 3vw, 12.5px);
+    }
+
+    /* ===== SAFE AREA PADDING (for notch/home bar) ===== */
+    .safe-bottom {
+      height: env(safe-area-inset-bottom, 0px);
+      height: max(env(safe-area-inset-bottom, 0px), 8px);
     }
   </style>
 </head>
@@ -364,51 +397,53 @@
 
   <canvas id="bg"></canvas>
 
-  <!-- Floating kanji characters -->
+  <!-- Floating kanji -->
   <div class="kanji" style="top:5%;left:5%;animation-duration:9s;">死</div>
-  <div class="kanji" style="top:15%;right:8%;animation-duration:12s;font-size:60px;">神</div>
-  <div class="kanji" style="bottom:20%;left:10%;animation-duration:7s;font-size:50px;">書</div>
-  <div class="kanji" style="bottom:10%;right:5%;animation-duration:10s;">罪</div>
-  <div class="kanji" style="top:40%;left:2%;animation-duration:8s;font-size:40px;">魂</div>
+  <div class="kanji" style="top:12%;right:6%;animation-duration:12s;">神</div>
+  <div class="kanji" style="bottom:22%;left:8%;animation-duration:7s;font-size:clamp(22px,5vw,42px);">書</div>
+  <div class="kanji" style="bottom:8%;right:4%;animation-duration:10s;">罪</div>
 
-  <!-- Ryuk eyes -->
+  <!-- Eyes -->
   <div class="eye-container left"><div class="eye"></div></div>
   <div class="eye-container right"><div class="eye"></div></div>
 
-  <!-- CARD -->
-  <div class="card">
-    <div class="app-icon">🎬</div>
-    <h1>سينمانا كيرا</h1>
-    <div class="subtitle-line"></div>
+  <!-- SCROLLABLE WRAPPER -->
+  <div class="wrapper">
+    <div class="card">
+      <div class="app-icon">🎬</div>
+      <h1>سينمانا كيرا</h1>
+      <div class="subtitle-line"></div>
 
-    <div class="desc-box">
-      <p>
-        هذا التطبيق مخصص لمشاهدة الأفلام والمسلسلات بدون إعلانات، ويعمل مع اشتراك نت ايرثلنك.
-        في حال لم يفتح معك قم بإطفاء الـ VPN واجعل الـ DNS تلقائي.
-        علماً أن التطبيق يدعم التحميل.
-      </p>
+      <div class="desc-box">
+        <p>
+          هذا التطبيق مخصص لمشاهدة الأفلام والمسلسلات بدون إعلانات، ويعمل مع اشتراك نت ايرثلنك.
+          في حال لم يفتح معك قم بإطفاء الـ VPN واجعل الـ DNS تلقائي.
+          علماً أن التطبيق يدعم التحميل.
+        </p>
+      </div>
+
+      <div class="btn-group">
+        <a class="install-btn"
+           href="itms-services://?action=download-manifest&url=https://ikira18.github.io/cine/manifest.plist">
+          ⬇️ &nbsp;تثبيت التطبيق
+        </a>
+
+        <a class="contact-btn" href="https://t.me/iKiraPlus" target="_blank">
+          ✉️ &nbsp;تواصل معي
+        </a>
+      </div>
+
+      <div class="note">
+        <strong>⚠️ ملاحظة مهمة</strong>
+        إذا ظهرت لك رسالة «المؤسسة غير موثوق بها» اتبع التالي:<br>
+        الإعدادات ← عام ← إدارة الأجهزة ← قم بتوثيق الشهادة
+      </div>
     </div>
-
-    <div class="btn-group">
-      <a class="install-btn"
-         href="itms-services://?action=download-manifest&url=https://ikira18.github.io/cine/manifest.plist">
-        ⬇️ &nbsp;تثبيت التطبيق
-      </a>
-
-      <a class="contact-btn" href="https://t.me/iKiraPlus" target="_blank">
-        ✉️ &nbsp;تواصل معي
-      </a>
-    </div>
-
-    <div class="note">
-      <strong>⚠️ ملاحظة مهمة</strong>
-      إذا ظهرت لك رسالة «المؤسسة غير موثوق بها» اتبع التالي:<br>
-      الإعدادات ← عام ← إدارة الأجهزة ← قم بتوثيق الشهادة
-    </div>
+    <div class="safe-bottom"></div>
   </div>
 
   <script>
-    /* ===== CANVAS: Death Note particles + red mist ===== */
+    /* ===== CANVAS ===== */
     const canvas = document.getElementById('bg');
     const ctx = canvas.getContext('2d');
     let W, H, particles = [], lines = [];
@@ -425,14 +460,14 @@
       reset() {
         this.x = Math.random() * W;
         this.y = Math.random() * H;
-        this.size = Math.random() * 1.5 + 0.3;
-        this.speedX = (Math.random() - 0.5) * 0.3;
-        this.speedY = (Math.random() - 0.5) * 0.3;
+        this.size = Math.random() * 1.2 + 0.3;
+        this.speedX = (Math.random() - 0.5) * 0.25;
+        this.speedY = (Math.random() - 0.5) * 0.25;
         this.life = Math.random();
         this.maxLife = Math.random() * 0.015 + 0.003;
         this.color = Math.random() > 0.7
-          ? `rgba(192,57,43,${Math.random()*0.6+0.1})`
-          : `rgba(201,168,76,${Math.random()*0.2+0.05})`;
+          ? `rgba(192,57,43,${Math.random()*0.5+0.1})`
+          : `rgba(201,168,76,${Math.random()*0.15+0.04})`;
       }
       update() {
         this.x += this.speedX;
@@ -453,10 +488,10 @@
       reset() {
         this.x = Math.random() * W;
         this.y = -20;
-        this.len = Math.random() * 80 + 40;
-        this.speed = Math.random() * 2 + 1;
-        this.alpha = Math.random() * 0.15 + 0.03;
-        this.width = Math.random() * 1 + 0.3;
+        this.len = Math.random() * 60 + 30;
+        this.speed = Math.random() * 1.5 + 0.8;
+        this.alpha = Math.random() * 0.12 + 0.02;
+        this.width = Math.random() * 0.8 + 0.3;
       }
       update() {
         this.y += this.speed;
@@ -477,26 +512,23 @@
     }
 
     function init() {
-      particles = Array.from({length: 180}, () => new Particle());
-      lines     = Array.from({length: 25},  () => new StreakLine());
+      particles = Array.from({length: 120}, () => new Particle());
+      lines     = Array.from({length: 18},  () => new StreakLine());
     }
     init();
 
     let t = 0;
     function draw() {
       t += 0.005;
-
-      /* deep background */
       ctx.fillStyle = 'rgba(8,5,3,0.18)';
       ctx.fillRect(0, 0, W, H);
 
-      /* red mist blobs */
       for (let i = 0; i < 3; i++) {
-        const bx = W * (0.2 + i * 0.3) + Math.sin(t + i * 2.1) * 80;
+        const bx = W * (0.2 + i * 0.3) + Math.sin(t + i * 2.1) * 60;
         const by = H * (0.3 + Math.sin(t * 0.7 + i) * 0.2);
-        const r  = 200 + i * 60;
+        const r  = 160 + i * 50;
         const g  = ctx.createRadialGradient(bx, by, 0, bx, by, r);
-        g.addColorStop(0, `rgba(${i===1?'100,20,20':'80,15,15'},0.06)`);
+        g.addColorStop(0, `rgba(${i===1?'90,18,18':'70,13,13'},0.05)`);
         g.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = g;
         ctx.beginPath();
@@ -506,7 +538,6 @@
 
       lines.forEach(l => { l.update(); l.draw(); });
       particles.forEach(p => { p.update(); p.draw(); });
-
       requestAnimationFrame(draw);
     }
     draw();
@@ -517,53 +548,24 @@
       el.className = 'page';
       el.style.left = Math.random() * 100 + 'vw';
       el.style.animationDuration = (Math.random() * 6 + 5) + 's';
-      el.style.animationDelay = (Math.random() * 3) + 's';
+      el.style.animationDelay = (Math.random() * 2) + 's';
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 12000);
     }
-    setInterval(createPage, 700);
+    setInterval(createPage, 900);
 
     /* ===== BLOOD DRIPS ===== */
     function createDrip() {
       const el = document.createElement('div');
       el.className = 'drip';
       el.style.left = Math.random() * 100 + 'vw';
-      el.style.width = (Math.random() * 3 + 2) + 'px';
+      el.style.width = (Math.random() * 2 + 1.5) + 'px';
       el.style.animationDuration = (Math.random() * 3 + 4) + 's';
       el.style.animationDelay = (Math.random() * 2) + 's';
       document.body.appendChild(el);
       setTimeout(() => el.remove(), 9000);
     }
-    setInterval(createDrip, 1200);
-
-    /* ===== RED LIGHTNING ===== */
-    function createLightning() {
-      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      svg.classList.add('lightning');
-      const x1 = Math.random() * W;
-      svg.style.cssText = `left:0;top:0;width:${W}px;height:${H}px;animation-duration:${Math.random()*4+3}s;animation-delay:${Math.random()*5}s`;
-      let path = `M ${x1} 0`;
-      let y = 0, x = x1;
-      while (y < H * 0.6) {
-        y += Math.random() * 60 + 30;
-        x += (Math.random() - 0.5) * 80;
-        path += ` L ${x} ${y}`;
-      }
-      const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      p.setAttribute('d', path);
-      p.setAttribute('stroke', 'rgba(192,57,43,0.5)');
-      p.setAttribute('stroke-width', '1.5');
-      p.setAttribute('fill', 'none');
-      p.setAttribute('filter', 'url(#blur)');
-      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-      defs.innerHTML = '<filter id="blur"><feGaussianBlur stdDeviation="2"/></filter>';
-      svg.appendChild(defs);
-      svg.appendChild(p);
-      document.body.appendChild(svg);
-      setTimeout(() => svg.remove(), 15000);
-    }
-    for (let i = 0; i < 5; i++) createLightning();
-    setInterval(createLightning, 5000);
+    setInterval(createDrip, 1500);
   </script>
 </body>
 </html>
